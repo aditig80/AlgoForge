@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGO_URI")
+}
+
+model User {
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  email          String          @unique
+  password       String?
+  googleId       String?         @unique
+  role           String          @default("user") // "user", "admin"
+  isBanned       Boolean         @default(false)
+  avatar         String?
+  xp_points      Int             @default(0)
+  streak_days    Int             @default(0)
+  last_active    DateTime        @default(now())
+  solvedProblems SolvedProblem[]
+  bookmarks      String[]        // Array of Problem IDs
+  activityLog    ActivityLog[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  // Relations
+  progress   UserProgress[]
+  forumPosts ForumPost[]    @relation("PostAuthor")
+  replies    Reply[]        @relation("ReplyAuthor")
+}
+
+type SolvedProblem {
+  problemId String
+  solvedAt  DateTime @default(now())
+}
+
+type ActivityLog {
+  date  String
+  count Int    @default(1)
+}
+
+model LearningPath {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  slug        String   @unique @map("id")
+  title       String
+  description String
+  icon        String
+  color       String
+  order_index Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  topics Topic[]
+}
+
+model Topic {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  slug        String   @unique @map("id")
+  path_slug   String   @map("path_id")
+  title       String
+  description String
+  order_index Int
+  icon        String
+  color       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  path     LearningPath @relation(fields: [path_slug], references: [slug])
+  problems Problem[]
+}
+
+model Problem {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  topic_slug   String     @map("topic_id")
+  difficulty   String     // "Easy", "Medium", "Hard"
+  video_link   String?
+  problem_link String?
+  description  String
+  tags         String[]
+  order_index  Int
+  testCases    TestCase[] // Added for Code Execution Engine
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  // Relations
+  topic    Topic          @relation(fields: [topic_slug], references: [slug])
+  progress UserProgress[]
+}
+
+type TestCase {
+  input          String
+  expectedOutput String
+  isHidden       Boolean @default(false)
+}
+
+model UserProgress {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  user_id       String   @db.ObjectId
+  problem_id    String   @db.ObjectId
+  status        String   @default("TODO") // "TODO", "SOLVED", "ATTEMPTED"
+  is_bookmarked Boolean  @default(false)
+  notes         String   @default("")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  user    User    @relation(fields: [user_id], references: [id])
+  problem Problem @relation(fields: [problem_id], references: [id])
+
+  @@unique([user_id, problem_id])
+}
+
+model ForumPost {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  content   String
+  authorId  String   @db.ObjectId
+  category  String   @default("general")
+  tags      String[]
+  likes     String[] @db.ObjectId
+  isPinned  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  author  User    @relation("PostAuthor", fields: [authorId], references: [id])
+  replies Reply[]
+
+  @@index([category, createdAt(sort: Desc)])
+  @@index([createdAt(sort: Desc)])
+}
+
+model Reply {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  authorId  String   @db.ObjectId
+  postId    String   @db.ObjectId
+  likes     String[] @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  author User      @relation("ReplyAuthor", fields: [authorId], references: [id])
+  post   ForumPost @relation(fields: [postId], references: [id])
+}
