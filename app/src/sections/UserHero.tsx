@@ -93,11 +93,11 @@ export function UserHero({ user, onTopicClick }: UserHeroProps) {
         const topicStats = topics.map((topic: any) => {
             const topicProblems = problems.filter((p: any) => p.topic_id === topic.id);
             const totalInTopic = topicProblems.length;
-            const solvedInTopic = topicProblems.filter((p: any) => solvedIds.has(p._id)).length;
+            const solvedInTopic = topicProblems.filter((p: any) => solvedIds.has(p.id)).length;
             const progress = totalInTopic > 0 ? Math.round((solvedInTopic / totalInTopic) * 100) : 0;
 
             // Most recent solve for this topic
-            const topicProblemIds = new Set(topicProblems.map((p: any) => p._id));
+            const topicProblemIds = new Set(topicProblems.map((p: any) => p.id));
             const topicSolves = solvedProgress.filter((p: any) => topicProblemIds.has(p.problem_id));
             const lastSolveDate = topicSolves.length > 0
                 ? Math.max(...topicSolves.map((p: any) => new Date(p.updatedAt).getTime()))
@@ -275,7 +275,7 @@ export function UserHero({ user, onTopicClick }: UserHeroProps) {
                                                     : ' Ready to tackle the next challenge?'}
                                             </p>
                                             <Button
-                                                onClick={() => onTopicClick(continueTopicData.id || continueTopicData._id)}
+                                                onClick={() => onTopicClick(continueTopicData.id || continueTopicData.id)}
                                                 className="bg-[#a088ff] text-white hover:bg-[#8e72ff] rounded-xl px-8 py-6 text-lg"
                                             >
                                                 <PlayCircle className="w-5 h-5 mr-2" />

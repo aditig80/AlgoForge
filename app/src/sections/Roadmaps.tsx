@@ -57,7 +57,7 @@ export function Roadmaps({ onPathClick }: RoadmapsProps) {
           await Promise.all(pathTopics.map(async (topic: any) => {
             try {
               const problems = await getProblemsByTopic(topic.id);
-              problems.forEach((p: any) => problemIds.push(p._id));
+              problems.forEach((p: any) => problemIds.push(p.id));
             } catch { /* ignore */ }
           }));
           pathProblemIds[path.id] = problemIds;

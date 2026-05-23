@@ -53,9 +53,9 @@ export function Notes() {
         const notesFromProgress: Note[] = progressData
           .filter((p: any) => p.notes && p.notes.trim() !== '')
           .map((p: any) => {
-            const problem = problemsData.find((prob: any) => prob._id === p.problem_id);
+            const problem = problemsData.find((prob: any) => prob.id === p.problem_id);
             return {
-              id: p._id,
+              id: p.id,
               problemId: p.problem_id,
               problemTitle: problem?.title || 'Unknown Problem',
               content: p.notes,
@@ -82,7 +82,7 @@ export function Notes() {
 
   // Problems available for new notes (not already having notes)
   const availableProblems = problems.filter(p => {
-    const hasNote = notes.some(n => n.problemId === p._id);
+    const hasNote = notes.some(n => n.problemId === p.id);
     return !hasNote && p.title.toLowerCase().includes(problemSearch.toLowerCase());
   });
 
@@ -115,7 +115,7 @@ export function Notes() {
 
       try {
         await updateNotes(newNoteProblemId, editForm.content);
-        const problem = problems.find((p: any) => p._id === newNoteProblemId);
+        const problem = problems.find((p: any) => p.id === newNoteProblemId);
         const newNote: Note = {
           id: newNoteProblemId + '-note',
           problemId: newNoteProblemId,
@@ -326,12 +326,12 @@ export function Notes() {
                         <div className="max-h-40 overflow-y-auto rounded-lg border border-white/10 bg-[#1a1a1a]">
                           {availableProblems.slice(0, 8).map((p: any) => (
                             <button
-                              key={p._id}
+                              key={p.id}
                               onClick={() => {
-                                setNewNoteProblemId(p._id);
+                                setNewNoteProblemId(p.id);
                                 setProblemSearch(p.title);
                               }}
-                              className={`w-full text-left px-3 py-2 text-sm hover:bg-white/10 transition-colors ${newNoteProblemId === p._id ? 'bg-[#a088ff]/20 text-[#a088ff]' : 'text-white/80'
+                              className={`w-full text-left px-3 py-2 text-sm hover:bg-white/10 transition-colors ${newNoteProblemId === p.id ? 'bg-[#a088ff]/20 text-[#a088ff]' : 'text-white/80'
                                 }`}
                             >
                               <span>{p.title}</span>
@@ -345,9 +345,9 @@ export function Notes() {
                           )}
                         </div>
                       )}
-                      {newNoteProblemId && !problemSearch.includes(problems.find((p: any) => p._id === newNoteProblemId)?.title || '') && (
+                      {newNoteProblemId && !problemSearch.includes(problems.find((p: any) => p.id === newNoteProblemId)?.title || '') && (
                         <p className="text-xs text-[#a088ff] mt-1">
-                          Selected: {problems.find((p: any) => p._id === newNoteProblemId)?.title}
+                          Selected: {problems.find((p: any) => p.id === newNoteProblemId)?.title}
                         </p>
                       )}
                     </div>

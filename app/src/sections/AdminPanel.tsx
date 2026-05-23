@@ -179,7 +179,7 @@ function UsersTab() {
 
     const handleSaveEdit = async () => {
         try {
-            await adminApi.editUser(editingUser._id, editForm);
+            await adminApi.editUser(editingUser.id, editForm);
             setEditingUser(null);
             fetchUsers();
         } catch (err) { console.error(err); }
@@ -221,7 +221,7 @@ function UsersTab() {
                             </thead>
                             <tbody>
                                 {users.map((user) => (
-                                    <tr key={user._id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                                    <tr key={user.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
                                         <td className="px-5 py-4">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#a088ff] to-[#63e3ff] flex items-center justify-center text-xs font-bold text-[#0a0a0a]">
@@ -256,10 +256,10 @@ function UsersTab() {
                                                 <button onClick={() => handleEdit(user)} className="p-1.5 rounded-lg hover:bg-white/10 text-white/40 hover:text-white transition-all" title="Edit">
                                                     <Edit3 className="w-4 h-4" />
                                                 </button>
-                                                <button onClick={() => handleBan(user._id)} className="p-1.5 rounded-lg hover:bg-amber-500/10 text-white/40 hover:text-amber-400 transition-all" title={user.isBanned ? 'Unban' : 'Ban'}>
+                                                <button onClick={() => handleBan(user.id)} className="p-1.5 rounded-lg hover:bg-amber-500/10 text-white/40 hover:text-amber-400 transition-all" title={user.isBanned ? 'Unban' : 'Ban'}>
                                                     {user.isBanned ? <ShieldOff className="w-4 h-4" /> : <Ban className="w-4 h-4" />}
                                                 </button>
-                                                <button onClick={() => handleDelete(user._id)} className="p-1.5 rounded-lg hover:bg-red-500/10 text-white/40 hover:text-red-400 transition-all" title="Delete">
+                                                <button onClick={() => handleDelete(user.id)} className="p-1.5 rounded-lg hover:bg-red-500/10 text-white/40 hover:text-red-400 transition-all" title="Delete">
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>
                                             </div>
@@ -368,7 +368,7 @@ function ContentTab() {
 
     const handleEditSave = async () => {
         try {
-            await adminApi.editProblem(editingProblem._id, {
+            await adminApi.editProblem(editingProblem.id, {
                 title: form.title,
                 difficulty: form.difficulty,
                 description: form.description,
@@ -449,7 +449,7 @@ function ContentTab() {
                             <div className="text-center py-12 text-white/40">No problems in this topic yet.</div>
                         ) : problems.map((p, i) => (
                             <motion.div
-                                key={p._id}
+                                key={p.id}
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: i * 0.03 }}
@@ -474,7 +474,7 @@ function ContentTab() {
                                     <button onClick={() => openEdit(p)} className="p-1.5 rounded-lg hover:bg-white/10 text-white/40 hover:text-white transition-all">
                                         <Edit3 className="w-4 h-4" />
                                     </button>
-                                    <button onClick={() => handleDelete(p._id)} className="p-1.5 rounded-lg hover:bg-red-500/10 text-white/40 hover:text-red-400 transition-all">
+                                    <button onClick={() => handleDelete(p.id)} className="p-1.5 rounded-lg hover:bg-red-500/10 text-white/40 hover:text-red-400 transition-all">
                                         <Trash2 className="w-4 h-4" />
                                     </button>
                                 </div>
@@ -563,7 +563,7 @@ function ForumTab() {
         // Fetch full post to get replies if they aren't included (fetchPosts aggregation doesn't include them)
         try {
             const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
-            const res = await fetch(`${API_BASE_URL}/api/forum/${post._id}`);
+            const res = await fetch(`${API_BASE_URL}/api/forum/${post.id}`);
             const fullPost = await res.json();
             setEditingPost(fullPost);
             setEditForm({ title: fullPost.title, content: fullPost.content, category: fullPost.category, isPinned: fullPost.isPinned || false });
@@ -576,7 +576,7 @@ function ForumTab() {
 
     const handleSaveEdit = async () => {
         try {
-            await adminApi.editForumPost(editingPost._id, editForm);
+            await adminApi.editForumPost(editingPost.id, editForm);
             setEditingPost(null);
             fetchPosts();
         } catch (err) { console.error(err); }
@@ -603,7 +603,7 @@ function ForumTab() {
                         <div className="text-center py-12 text-white/40">No forum posts yet.</div>
                     ) : posts.map((post, i) => (
                         <motion.div
-                            key={post._id}
+                            key={post.id}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.03 }}
@@ -624,7 +624,7 @@ function ForumTab() {
                                     <button onClick={() => handleEdit(post)} className="p-1.5 rounded-lg hover:bg-white/10 text-white/40 hover:text-white transition-all shadow-sm">
                                         <Edit3 className="w-4 h-4" />
                                     </button>
-                                    <button onClick={() => handleDelete(post._id)} className="p-1.5 rounded-lg hover:bg-red-500/10 text-white/40 hover:text-red-400 transition-all shadow-sm">
+                                    <button onClick={() => handleDelete(post.id)} className="p-1.5 rounded-lg hover:bg-red-500/10 text-white/40 hover:text-red-400 transition-all shadow-sm">
                                         <Trash2 className="w-4 h-4" />
                                     </button>
                                 </div>
@@ -684,13 +684,13 @@ function ForumTab() {
                                     <label className="text-xs font-medium text-white/50 uppercase tracking-wider mb-2 block">Replies ({editingPost.replies.length})</label>
                                     <div className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                                         {editingPost.replies.map((reply: any) => (
-                                            <div key={reply._id} className="p-3 rounded-lg bg-white/5 border border-white/5 flex items-start justify-between gap-3">
+                                            <div key={reply.id} className="p-3 rounded-lg bg-white/5 border border-white/5 flex items-start justify-between gap-3">
                                                 <div className="flex-1 min-w-0">
                                                     <p className="text-xs text-white/80 line-clamp-2">{reply.content}</p>
                                                     <p className="text-[10px] text-white/40 mt-1">by {reply.author?.name || 'Unknown'}</p>
                                                 </div>
                                                 <button
-                                                    onClick={() => handleDeleteReply(editingPost._id, reply._id)}
+                                                    onClick={() => handleDeleteReply(editingPost.id, reply.id)}
                                                     className="p-1.5 rounded-lg hover:bg-red-500/10 text-white/30 hover:text-red-400 transition-all flex-shrink-0"
                                                     title="Delete Reply"
                                                 >

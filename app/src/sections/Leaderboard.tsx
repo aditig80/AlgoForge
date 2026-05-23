@@ -135,8 +135,12 @@ export function Leaderboard() {
             {/* 2nd Place */}
             {leaderboardData[1] && (
               <div className="flex flex-col items-center">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#c0c0c0]/30 to-[#c0c0c0]/10 flex items-center justify-center mb-3 border-2 border-[#c0c0c0]/50">
-                  <span className="text-2xl font-bold text-[#c0c0c0]">{leaderboardData[1].avatar}</span>
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#c0c0c0]/30 to-[#c0c0c0]/10 flex items-center justify-center mb-3 border-2 border-[#c0c0c0]/50 overflow-hidden">
+                  {leaderboardData[1].avatar?.startsWith('http') ? (
+                    <img src={leaderboardData[1].avatar} alt={leaderboardData[1].name} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-2xl font-bold text-[#c0c0c0]">{leaderboardData[1].avatar}</span>
+                  )}
                 </div>
                 <p className="text-white font-medium text-sm mb-1">{leaderboardData[1].name}</p>
                 <p className="text-[#c0c0c0] text-xs">{leaderboardData[1].xp.toLocaleString()} XP</p>
@@ -149,8 +153,12 @@ export function Leaderboard() {
             {/* 1st Place */}
             {leaderboardData[0] && (
               <div className="flex flex-col items-center -mt-8">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#ffd700]/30 to-[#ffd700]/10 flex items-center justify-center mb-3 border-2 border-[#ffd700]/50 animate-pulse-glow">
-                  <span className="text-3xl font-bold text-[#ffd700]">{leaderboardData[0].avatar}</span>
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#ffd700]/30 to-[#ffd700]/10 flex items-center justify-center mb-3 border-2 border-[#ffd700]/50 animate-pulse-glow overflow-hidden">
+                  {leaderboardData[0].avatar?.startsWith('http') ? (
+                    <img src={leaderboardData[0].avatar} alt={leaderboardData[0].name} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-3xl font-bold text-[#ffd700]">{leaderboardData[0].avatar}</span>
+                  )}
                 </div>
                 <p className="text-white font-medium mb-1">{leaderboardData[0].name}</p>
                 <p className="text-[#ffd700] text-sm">{leaderboardData[0].xp.toLocaleString()} XP</p>
@@ -163,8 +171,12 @@ export function Leaderboard() {
             {/* 3rd Place */}
             {leaderboardData[2] && (
               <div className="flex flex-col items-center">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#cd7f32]/30 to-[#cd7f32]/10 flex items-center justify-center mb-3 border-2 border-[#cd7f32]/50">
-                  <span className="text-2xl font-bold text-[#cd7f32]">{leaderboardData[2].avatar}</span>
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#cd7f32]/30 to-[#cd7f32]/10 flex items-center justify-center mb-3 border-2 border-[#cd7f32]/50 overflow-hidden">
+                  {leaderboardData[2].avatar?.startsWith('http') ? (
+                    <img src={leaderboardData[2].avatar} alt={leaderboardData[2].name} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-2xl font-bold text-[#cd7f32]">{leaderboardData[2].avatar}</span>
+                  )}
                 </div>
                 <p className="text-white font-medium text-sm mb-1">{leaderboardData[2].name}</p>
                 <p className="text-[#cd7f32] text-xs">{leaderboardData[2].xp.toLocaleString()} XP</p>
@@ -197,8 +209,12 @@ export function Leaderboard() {
               </div>
 
               {/* Avatar */}
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#a088ff]/20 to-[#63e3ff]/20 flex items-center justify-center">
-                <span className="text-sm font-medium text-white">{user.avatar}</span>
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#a088ff]/20 to-[#63e3ff]/20 flex items-center justify-center overflow-hidden">
+                {user.avatar?.startsWith('http') ? (
+                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-sm font-medium text-white">{user.avatar}</span>
+                )}
               </div>
 
               {/* Name */}
@@ -237,10 +253,14 @@ export function Leaderboard() {
               <div className="w-8 flex justify-center">
                 <span className="text-white/60 font-medium">#?</span>
               </div>
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#a088ff] to-[#63e3ff] flex items-center justify-center">
-                <span className="text-sm font-medium text-[#141414]">
-                  {profile.name?.charAt(0).toUpperCase() || 'Y'}
-                </span>
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#a088ff] to-[#63e3ff] flex items-center justify-center overflow-hidden">
+                {profile.avatar?.startsWith('http') ? (
+                  <img src={profile.avatar} alt={profile.name} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-sm font-medium text-[#141414]">
+                    {profile.name?.charAt(0).toUpperCase() || 'Y'}
+                  </span>
+                )}
               </div>
               <div className="flex-1">
                 <p className="text-white font-medium">You</p>

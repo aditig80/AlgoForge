@@ -8,7 +8,7 @@ const getAuthHeader = () => {
 };
 
 export interface ForumPostSummary {
-    _id: string;
+    id: string;
     title: string;
     content: string; // snippet
     category: string;
@@ -20,17 +20,17 @@ export interface ForumPostSummary {
     createdAt: string;
     updatedAt: string;
     authorInfo: {
-        _id: string;
+        id: string;
         name: string;
         avatar?: string;
     };
 }
 
 export interface ForumReply {
-    _id: string;
+    id: string;
     content: string;
     author: {
-        _id: string;
+        id: string;
         name: string;
         avatar?: string;
     };
@@ -39,7 +39,7 @@ export interface ForumReply {
 }
 
 export interface ForumPostFull {
-    _id: string;
+    id: string;
     title: string;
     content: string;
     category: string;
@@ -50,7 +50,7 @@ export interface ForumPostFull {
     createdAt: string;
     updatedAt: string;
     author: {
-        _id: string;
+        id: string;
         name: string;
         avatar?: string;
     };

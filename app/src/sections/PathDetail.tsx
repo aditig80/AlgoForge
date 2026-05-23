@@ -68,7 +68,7 @@ export function PathDetail({ pathId, onBack, onTopicClick }: PathDetailProps) {
                         const medium = problems.filter((p: any) => p.difficulty === 'Medium').length;
                         const hard = problems.filter((p: any) => p.difficulty === 'Hard').length;
 
-                        const completed = problems.filter((p: any) => solvedSet.has(p._id)).length;
+                        const completed = problems.filter((p: any) => solvedSet.has(p.id)).length;
 
                         stats[topic.id] = { total: problems.length, completed, easy, medium, hard };
                     } catch {

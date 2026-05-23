@@ -48,7 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (res.ok) {
         const userData = await res.json();
         const userObj = {
-          id: userData._id,
+          id: userData.id,
           email: userData.email,
           name: userData.name,
           role: userData.role,
@@ -59,7 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         };
 
         setUser(userObj);
-        setProfile({ ...userData, id: userData._id });
+        setProfile({ ...userData, id: userData.id });
       }
     } catch (error) {
       console.error('Profile refresh failed', error);
@@ -105,7 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('token', data.token);
 
       const userObj = {
-        id: data._id,
+        id: data.id,
         email: data.email,
         name: data.name,
         role: data.role,
@@ -116,7 +116,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       };
 
       setUser(userObj);
-      setProfile({ ...data, id: data._id });
+      setProfile({ ...data, id: data.id });
 
       return { error: null };
     } catch (err) {
@@ -142,7 +142,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('token', data.token);
 
       const userObj = {
-        id: data._id,
+        id: data.id,
         email: data.email,
         name: data.name,
         role: data.role,
@@ -153,7 +153,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       };
 
       setUser(userObj);
-      setProfile({ ...data, id: data._id });
+      setProfile({ ...data, id: data.id });
 
       return { error: null };
     } catch (err) {
@@ -182,7 +182,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('token', data.token);
 
       const userObj = {
-        id: data._id,
+        id: data.id,
         email: data.email,
         name: data.name,
         role: data.role,
@@ -193,7 +193,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       };
 
       setUser(userObj);
-      setProfile({ ...data, id: data._id });
+      setProfile({ ...data, id: data.id });
 
       return { error: null, isNewUser: data.isNewUser };
     } catch (err) {

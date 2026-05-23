@@ -295,7 +295,7 @@ export function TopicDetail({ topicId, onBack }: TopicDetailProps) {
           className="space-y-3"
         >
           {filteredProblems.map((problem: any, index: number) => {
-            const problemMongoId = problem._id;
+            const problemMongoId = problem.id;
             const isCompleted = completedProblems.has(problemMongoId);
             const isBookmarked = bookmarkedProblems.has(problemMongoId);
 

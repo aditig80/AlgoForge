@@ -109,16 +109,16 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     let easy = 0, medium = 0, hard = 0;
     let easyTotal = 0, mediumTotal = 0, hardTotal = 0;
     problems.forEach((p: any) => {
-      if (p.difficulty === 'Easy') { easyTotal++; if (solvedIds.has(p._id)) easy++; }
-      else if (p.difficulty === 'Medium') { mediumTotal++; if (solvedIds.has(p._id)) medium++; }
-      else if (p.difficulty === 'Hard') { hardTotal++; if (solvedIds.has(p._id)) hard++; }
+      if (p.difficulty === 'Easy') { easyTotal++; if (solvedIds.has(p.id)) easy++; }
+      else if (p.difficulty === 'Medium') { mediumTotal++; if (solvedIds.has(p.id)) medium++; }
+      else if (p.difficulty === 'Hard') { hardTotal++; if (solvedIds.has(p.id)) hard++; }
     });
 
     const recent = solvedProgress
       .sort((a: any, b: any) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
       .slice(0, 5)
       .map((p: any) => {
-        const prob = problems.find((prob: any) => prob._id === p.problem_id);
+        const prob = problems.find((prob: any) => prob.id === p.problem_id);
         return {
           problem: prob ? prob.title : 'Unknown Problem',
           time: p.updatedAt,
@@ -156,10 +156,10 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     return topics.map((topic: any) => {
       const topicProblems = problems.filter((p: any) => p.topic_id === topic.id);
       const totalInTopic = topicProblems.length;
-      const solvedInTopic = topicProblems.filter((p: any) => solvedIds.has(p._id)).length;
+      const solvedInTopic = topicProblems.filter((p: any) => solvedIds.has(p.id)).length;
       const progress = totalInTopic > 0 ? Math.round((solvedInTopic / totalInTopic) * 100) : 0;
 
-      const topicProblemIds = new Set(topicProblems.map((p: any) => p._id));
+      const topicProblemIds = new Set(topicProblems.map((p: any) => p.id));
       const topicSolves = solvedProgress.filter((p: any) => topicProblemIds.has(p.problem_id));
       const lastSolveDate = topicSolves.length > 0
         ? Math.max(...topicSolves.map((p: any) => new Date(p.updatedAt).getTime()))

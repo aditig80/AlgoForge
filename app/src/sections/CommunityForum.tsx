@@ -165,7 +165,7 @@ export function CommunityForum({ onBack, onAuthClick }: CommunityForumProps) {
 
         setReplySubmitting(true);
         try {
-            const updated = await addReply(selectedPost._id, replyText.trim());
+            const updated = await addReply(selectedPost.id, replyText.trim());
             setSelectedPost(updated);
             setReplyText('');
         } catch (err) {
@@ -183,11 +183,11 @@ export function CommunityForum({ onBack, onAuthClick }: CommunityForumProps) {
         }
         try {
             const result = await togglePostLike(postId);
-            if (selectedPost && selectedPost._id === postId) {
+            if (selectedPost && selectedPost.id === postId) {
                 setSelectedPost({ ...selectedPost, likes: result.likes });
             }
             setPosts(prev => prev.map(p =>
-                p._id === postId ? { ...p, likes: result.likes, likesCount: result.likes.length } : p
+                p.id === postId ? { ...p, likes: result.likes, likesCount: result.likes.length } : p
             ));
         } catch (err) {
             console.error('Failed to like post:', err);
@@ -200,11 +200,11 @@ export function CommunityForum({ onBack, onAuthClick }: CommunityForumProps) {
             return;
         }
         try {
-            const result = await toggleReplyLike(selectedPost._id, replyId);
+            const result = await toggleReplyLike(selectedPost.id, replyId);
             setSelectedPost({
                 ...selectedPost,
                 replies: selectedPost.replies.map(r =>
-                    r._id === replyId ? { ...r, likes: result.likes } : r
+                    r.id === replyId ? { ...r, likes: result.likes } : r
                 )
             });
         } catch (err) {
@@ -277,7 +277,7 @@ export function CommunityForum({ onBack, onAuthClick }: CommunityForumProps) {
 
                                 <div className="flex items-center gap-4 pt-4 border-t border-white/5">
                                     <button
-                                        onClick={() => handleLikePost(selectedPost._id)}
+                                        onClick={() => handleLikePost(selectedPost.id)}
                                         className={`flex items-center gap-2 text-sm transition-colors ${user && selectedPost.likes.includes(user.id)
                                             ? 'text-red-400'
                                             : 'text-white/50 hover:text-red-400'
@@ -297,7 +297,7 @@ export function CommunityForum({ onBack, onAuthClick }: CommunityForumProps) {
                             <div className="space-y-4 mb-6">
                                 {selectedPost.replies.map((reply, idx) => (
                                     <motion.div
-                                        key={reply._id}
+                                        key={reply.id}
                                         initial={{ opacity: 0, x: -10 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: idx * 0.05 }}
@@ -322,7 +322,7 @@ export function CommunityForum({ onBack, onAuthClick }: CommunityForumProps) {
                                             {reply.content}
                                         </p>
                                         <button
-                                            onClick={() => handleLikeReply(reply._id)}
+                                            onClick={() => handleLikeReply(reply.id)}
                                             className={`flex items-center gap-1.5 text-xs transition-colors ${user && reply.likes.includes(user.id)
                                                 ? 'text-red-400'
                                                 : 'text-white/40 hover:text-red-400'
@@ -572,11 +572,11 @@ export function CommunityForum({ onBack, onAuthClick }: CommunityForumProps) {
                     <div className="space-y-3">
                         {posts.map((post, index) => (
                             <motion.div
-                                key={post._id}
+                                key={post.id}
                                 initial={{ opacity: 0, y: 15 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.04 }}
-                                onClick={() => handleOpenPost(post._id)}
+                                onClick={() => handleOpenPost(post.id)}
                                 className="glass rounded-2xl p-5 border border-white/5 bg-[#0a0a0a]/40 backdrop-blur-md cursor-pointer hover:border-white/10 hover:bg-[#0a0a0a]/60 transition-all group"
                             >
                                 <div className="flex items-start gap-4">
@@ -625,7 +625,7 @@ export function CommunityForum({ onBack, onAuthClick }: CommunityForumProps) {
                                         {/* Stats */}
                                         <div className="flex items-center gap-4">
                                             <button
-                                                onClick={(e) => handleLikePost(post._id, e)}
+                                                onClick={(e) => handleLikePost(post.id, e)}
                                                 className={`flex items-center gap-1.5 text-xs transition-colors ${user && post.likes.includes(user.id)
                                                     ? 'text-red-400'
                                                     : 'text-white/40 hover:text-red-400'

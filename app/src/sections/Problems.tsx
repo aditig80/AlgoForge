@@ -313,7 +313,7 @@ export function Problems() {
           className="grid gap-3"
         >
           {filteredProblems.map((problem: any, index: number) => {
-            const problemMongoId = problem._id;
+            const problemMongoId = problem.id || problem.id;
             const isCompleted = completedProblems.has(problemMongoId);
             const isBookmarked = bookmarkedProblems.has(problemMongoId);
             const topic = topics.find((t: any) => t.id === problem.topic_id);

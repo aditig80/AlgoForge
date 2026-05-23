@@ -62,8 +62,8 @@ export function DailyChallenges({ onBack }: DailyChallengesProps) {
 
         // Simple seeded shuffle to pick 3 problems deterministically per day
         const shuffled = [...allProblems].sort((a, b) => {
-            const hashA = ((seed * 31 + a._id.charCodeAt(0)) * 37) % 1000;
-            const hashB = ((seed * 31 + b._id.charCodeAt(0)) * 37) % 1000;
+            const hashA = ((seed * 31 + a.id.charCodeAt(0)) * 37) % 1000;
+            const hashB = ((seed * 31 + b.id.charCodeAt(0)) * 37) % 1000;
             return hashA - hashB;
         });
 
@@ -80,7 +80,7 @@ export function DailyChallenges({ onBack }: DailyChallengesProps) {
         return selected;
     }, [allProblems]);
 
-    const challengesSolved = dailyProblems.filter(p => completedProblems.has(p._id)).length;
+    const challengesSolved = dailyProblems.filter(p => completedProblems.has(p.id)).length;
     const allCompleted = challengesSolved === dailyProblems.length && dailyProblems.length > 0;
 
     const toggleComplete = async (problemMongoId: string) => {
@@ -180,12 +180,12 @@ export function DailyChallenges({ onBack }: DailyChallengesProps) {
                 {/* Challenge cards */}
                 <div className="space-y-4">
                     {dailyProblems.map((problem, index) => {
-                        const isCompleted = completedProblems.has(problem._id);
+                        const isCompleted = completedProblems.has(problem.id);
 
 
                         return (
                             <motion.div
-                                key={problem._id}
+                                key={problem.id}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: index * 0.15 }}
@@ -243,7 +243,7 @@ export function DailyChallenges({ onBack }: DailyChallengesProps) {
                                             </a>
                                         )}
                                         <button
-                                            onClick={() => toggleComplete(problem._id)}
+                                            onClick={() => toggleComplete(problem.id)}
                                             className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${isCompleted
                                                 ? 'bg-[#7ca700]/20 hover:bg-[#7ca700]/30'
                                                 : 'bg-white/5 hover:bg-white/10'
