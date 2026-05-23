@@ -11,6 +11,7 @@ const port = process.env.PORT || 5000;
 // Middleware
 const allowedOrigins = [
     'https://algo-forge-2-0.vercel.app',
+    'https://algoforge-2-0.onrender.com',
     'http://localhost:5173',
     'http://localhost:3000',
     process.env.CLIENT_URL,
