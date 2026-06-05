@@ -4,7 +4,7 @@ import path from 'path';
 
 dotenv.config({ path: path.join(__dirname, '../../.env') });
 
-const uri = process.env.MONGO_URI;
+const uri = process.env.MONGO_URI as string;
 
 if (!uri) {
     console.error("MONGO_URI is missing in .env");
