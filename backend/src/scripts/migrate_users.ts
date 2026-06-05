@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 import path from 'path';
 
@@ -6,54 +6,110 @@ dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 const uri = process.env.MONGO_URI as string;
 
-if (!uri) {
-    console.error("MONGO_URI is missing in .env");
-    process.exit(1);
-}
-
 async function migrate() {
-    // The original Mongoose URI didn't specify a database, which defaults to 'test'
-    // We connect to the cluster level to access both 'test' and 'algoforge' databases.
-    const client = new MongoClient(uri);
+    console.log("Starting migration using Prisma engine to bypass DNS issues...");
+
+    // 1. Connect to the 'test' database using Prisma
+    const testDbUri = uri.replace('/algoforge', '/test');
+    const testPrisma = new PrismaClient({
+        datasources: { db: { url: testDbUri } }
+    });
+
+    // 2. Connect to the 'algoforge' database
+    const algoforgePrisma = new PrismaClient({
+        datasources: { db: { url: uri } }
+    });
 
     try {
-        await client.connect();
-        
-        const testDb = client.db('test');
-        const algoforgeDb = client.db('algoforge');
-
-        // 1. Migrate Users
         console.log("Fetching old users from 'test' database...");
-        const oldUsers = await testDb.collection('users').find({}).toArray();
+        
+        // Find users from test db using raw command
+        const usersResult = await testPrisma.$runCommandRaw({
+            find: "users",
+            filter: {}
+        }) as any;
+
+        const oldUsers = usersResult?.cursor?.firstBatch || [];
         console.log(`Found ${oldUsers.length} old users.`);
 
         if (oldUsers.length > 0) {
             console.log("Inserting into 'algoforge.User'...");
             for (const user of oldUsers) {
-                // Check if user already exists in new DB to prevent duplicates
-                const exists = await algoforgeDb.collection('User').findOne({ _id: user._id });
+                // Ensure the user doesn't already exist in the new DB
+                const exists = await algoforgePrisma.user.findUnique({
+                    where: { id: user._id.$oid || user._id }
+                }).catch(() => null);
+
                 if (!exists) {
-                    await algoforgeDb.collection('User').insertOne(user);
+                    try {
+                        await algoforgePrisma.user.create({
+                            data: {
+                                id: user._id.$oid || user._id,
+                                name: user.name,
+                                email: user.email,
+                                password: user.password,
+                                googleId: user.googleId,
+                                role: user.role || 'user',
+                                isBanned: user.isBanned || false,
+                                avatar: user.avatar,
+                                xp_points: user.xp_points || 0,
+                                streak_days: user.streak_days || 0,
+                                last_active: user.last_active ? new Date(user.last_active.$date || user.last_active) : new Date(),
+                                createdAt: user.createdAt ? new Date(user.createdAt.$date || user.createdAt) : new Date(),
+                                updatedAt: user.updatedAt ? new Date(user.updatedAt.$date || user.updatedAt) : new Date(),
+                                bookmarks: user.bookmarks || []
+                            }
+                        });
+                    } catch (e) {
+                        console.error("Skipped a user due to validation error:", user.email);
+                    }
                 }
             }
             console.log("Users migrated successfully!");
         }
 
-        // 2. Migrate UserProgress
         console.log("Fetching old UserProgress from 'test' database...");
-        const oldProgress = await testDb.collection('userprogresses').find({}).toArray();
-        // Mongoose might have also named it 'userprogress' depending on exact pluralize rules
-        const fallbackProgress = await testDb.collection('userprogress').find({}).toArray();
         
-        const allOldProgress = [...oldProgress, ...fallbackProgress];
+        // Find user progress from test db
+        const progressResult = await testPrisma.$runCommandRaw({
+            find: "userprogresses",
+            filter: {}
+        }) as any;
+        const oldProgress1 = progressResult?.cursor?.firstBatch || [];
+
+        const progressResultFallback = await testPrisma.$runCommandRaw({
+            find: "userprogress",
+            filter: {}
+        }) as any;
+        const oldProgress2 = progressResultFallback?.cursor?.firstBatch || [];
+
+        const allOldProgress = [...oldProgress1, ...oldProgress2];
         console.log(`Found ${allOldProgress.length} progress records.`);
 
         if (allOldProgress.length > 0) {
             console.log("Inserting into 'algoforge.UserProgress'...");
             for (const progress of allOldProgress) {
-                const exists = await algoforgeDb.collection('UserProgress').findOne({ _id: progress._id });
+                const exists = await algoforgePrisma.userProgress.findUnique({
+                    where: { id: progress._id.$oid || progress._id }
+                }).catch(() => null);
+
                 if (!exists) {
-                    await algoforgeDb.collection('UserProgress').insertOne(progress);
+                    try {
+                        await algoforgePrisma.userProgress.create({
+                            data: {
+                                id: progress._id.$oid || progress._id,
+                                user_id: progress.user_id.$oid || progress.user_id,
+                                problem_id: progress.problem_id.$oid || progress.problem_id,
+                                status: progress.status || 'TODO',
+                                is_bookmarked: progress.is_bookmarked || false,
+                                notes: progress.notes || '',
+                                createdAt: progress.createdAt ? new Date(progress.createdAt.$date || progress.createdAt) : new Date(),
+                                updatedAt: progress.updatedAt ? new Date(progress.updatedAt.$date || progress.updatedAt) : new Date(),
+                            }
+                        });
+                    } catch(e) {
+                        console.log("Skipped a progress record due to missing user/problem relation.");
+                    }
                 }
             }
             console.log("UserProgress migrated successfully!");
@@ -64,7 +120,8 @@ async function migrate() {
     } catch (err) {
         console.error("Migration failed:", err);
     } finally {
-        await client.close();
+        await testPrisma.$disconnect();
+        await algoforgePrisma.$disconnect();
     }
 }
 
