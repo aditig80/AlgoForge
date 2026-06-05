@@ -1,106 +1,110 @@
-# AlgoForge 2.0
+<div align="center">
+  <img src="app/public/favicon.svg" alt="AlgoForge Logo" width="120" />
+</div>
 
-AlgoForge 2.0 is a modern, gamified platform designed to help developers master Data Structures and Algorithms (DSA). Inspired by top learning platforms, it combines a structured roadmap with engaging gamification elements like streaks, XP systems, and global leaderboards to make learning consistent and addictive.
+<h1 align="center">AlgoForge</h1>
 
-## Features
+<div align="center">
+  <strong>Master Data Structures and Algorithms with a gamified, structured, and modern learning platform.</strong>
+</div>
+<br />
 
-### Gamified Learning
-- **XP & Levels:** Earn XP for every problem solved and level up your profile.
-- **Streaks:** Maintain daily activity to build discipline.
-- **Badges:** Unlock achievements for milestones.
+AlgoForge is designed to help developers build algorithmic intuition through consistent practice. Inspired by top-tier learning platforms, it combines a highly structured roadmap with engaging gamification elements—such as streaks, XP systems, and global leaderboards—to make learning addictive and rewarding.
 
-### Structured Roadmaps
-- Curated paths for DSA topics (Arrays, Trees, Graphs, DP).
-- Video solutions and practice problems for each topic.
-- Progress tracking per module.
+## Key Features
 
-### Dynamic Leaderboard
-- Real-time global rankings.
-- Filter by XP, Streak, or Problems Solved.
-- See where you stand against other learners.
-
-### Personalized Dashboard
-- **Activity Graph:** Visualize your weekly coding intensity.
-- **Resume Learning:** One-click access to your last studied topic.
-- **Stats Overview:** Quick view of your solve count and global rank.
-
-### Secure Authentication
-- Email/Password login.
-- Google OAuth integration for one-click access.
+- **Gamified Learning Experience**  
+  Earn XP for every problem you solve to level up your profile. Maintain daily activity streaks to build discipline, and unlock exclusive badges for reaching key milestones.
+- **Structured Roadmaps**  
+  Follow curated paths covering essential DSA topics (Arrays, Trees, Graphs, Dynamic Programming). Each module includes conceptual videos, practice problems, and progress tracking.
+- **Dynamic Leaderboard**  
+  See where you stand globally in real-time. Filter rankings by XP, current streak, or total problems solved to compete with fellow learners.
+- **Personalized Dashboard**  
+  Visualize your weekly coding intensity with activity graphs. Use the "Resume Learning" feature for one-click access to your last studied topic, and get a quick overview of your global rank and stats.
+- **Secure Authentication**  
+  Secure and seamless access using Email/Password login or Google OAuth 2.0 for one-click authentication.
 
 ## Tech Stack
 
-### Frontend
-- **Framework:** [Next.js](https://nextjs.org/)
-- **Language:** TypeScript
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-- **Animations:** [Framer Motion](https://www.framer.com/motion/)
-- **Icons:** [Lucide React](https://lucide.dev/)
-- **Routing:** App Router
+The platform is built using a modern, scalable stack:
 
-### Backend
-- **Runtime:** [Node.js](https://nodejs.org/)
-- **Framework:** [Express.js](https://expressjs.com/)
-- **Database:** [MongoDB](https://www.mongodb.com/) + [Mongoose](https://mongoosejs.com/)
-- **Authentication:** JWT (JSON Web Tokens) & Google OAuth 2.0
+**Frontend**
+- **Framework:** React + Vite
+- **Language:** TypeScript
+- **Styling & UI:** Tailwind CSS, Radix UI, Lucide React
+- **Animations:** Framer Motion, GSAP
+- **State/Query:** React Query, React Hook Form
+
+**Backend**
+- **Runtime:** Node.js
+- **Framework:** Express.js
+- **Database:** MongoDB & Mongoose
+- **Auth:** JWT (JSON Web Tokens) & Google OAuth 2.0
 
 ## Getting Started
 
-Follow these steps to set up the project locally.
+> [!IMPORTANT]
+> Ensure you have **Node.js (v18+)** installed and access to a **MongoDB** instance (local or Atlas) before proceeding.
 
-### Prerequisites
-- Node.js (v18+)
-- MongoDB (Local or Atlas URL)
+### 1. Clone the repository
 
-### Installation
+```bash
+git clone https://github.com/Rishabhworkspace/AlgoForge-2.0.git
+cd AlgoForge-2.0
+```
 
-1.  **Clone the repository**
-    ```bash
-    git clone https://github.com/Rishabhworkspace/AlgoForge-2.0.git
-    cd AlgoForge-2.0
-    ```
+### 2. Setup the Backend
 
-2.  **Setup Backend**
-    ```bash
-    cd backend
-    npm install
-    ```
-    Create a `.env` file in the `backend` directory:
-    ```env
-    PORT=5000
-    MONGO_URI=your_mongodb_connection_string
-    JWT_SECRET=your_jwt_secret
-    GOOGLE_CLIENT_ID=your_google_client_id
-    CLIENT_URL=http://localhost:5173
-    ```
-    Start the server:
-    ```bash
-    npm run dev
-    ```
+```bash
+cd backend
+npm install
+```
 
-3.  **Setup Frontend**
-    Open a new terminal and navigate to the `app` directory:
-    ```bash
-    cd app
-    npm install
-    ```
-    Create a `.env` file in the `app` directory:
-    ```env
-    VITE_API_BASE_URL=http://localhost:5000
-    VITE_GOOGLE_CLIENT_ID=your_google_client_id
-    ```
-    Start the client:
-    ```bash
-    npm run dev
-    ```
+Create a `.env` file in the `backend` directory with the following variables:
 
-4.  **Visit the App**
-    Open [http://localhost:5173](http://localhost:5173) in your browser.
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+GOOGLE_CLIENT_ID=your_google_client_id
+CLIENT_URL=http://localhost:5173
+```
 
-## Contributing
+> [!NOTE]
+> Make sure your `MONGO_URI` points to a running MongoDB instance and your `GOOGLE_CLIENT_ID` is correctly configured in your Google Cloud Console to allow the `CLIENT_URL` as an authorized origin.
 
-Contributions are welcome! Please fork the repository and submit a pull request for any features or bug fixes.
+Start the backend server:
 
-## License
+```bash
+npm run dev
+```
 
-This project is licensed under the MIT License.
+### 3. Setup the Frontend
+
+Open a new terminal session, navigate to the `app` directory, and install the dependencies:
+
+```bash
+cd app
+npm install
+```
+
+Create a `.env` file in the `app` directory:
+
+```env
+VITE_API_BASE_URL=http://localhost:5000
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
+```
+
+Start the frontend development server:
+
+```bash
+npm run dev
+```
+
+### 4. Run the Application
+
+Open your browser and navigate to [http://localhost:5173](http://localhost:5173) to view the application.
+
+> [!TIP]
+> Use the mock data or register a new account to test the XP and Streak systems locally.
+```
