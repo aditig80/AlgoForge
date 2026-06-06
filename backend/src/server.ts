@@ -5,6 +5,11 @@ import connectDB from './config/db';
 
 dotenv.config();
 
+// server.ts — add before app.listen()
+if (!process.env.JWT_SECRET) {
+  throw new Error('FATAL: JWT_SECRET environment variable is not set.');
+}
+
 const app: Express = express();
 const port = process.env.PORT || 5000;
 
