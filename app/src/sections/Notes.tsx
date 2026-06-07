@@ -180,6 +180,7 @@ export function Notes() {
       }
       toast.success('Note deleted');
     } catch (e) {
+      console.error('Failed to delete note', e);
       toast.error('Failed to delete note');
     } finally {
       setNoteToDelete(null);
