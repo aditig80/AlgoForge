@@ -125,10 +125,12 @@ export function Notes() {
       }
 
       try {
-        await updateNotes(newNoteProblemId, editForm.content);
+        const responseData = await updateNotes(newNoteProblemId, editForm.content);
+        const realNoteId = responseData?.progress?._id || responseData?.progress?.id || responseData?._id || responseData?.id;
+        
         const problem = problems.find((p: any) => p.id === newNoteProblemId);
         const newNote: Note = {
-          id: newNoteProblemId + '-note',
+          id: realNoteId as string,
           problemId: newNoteProblemId,
           problemTitle: problem?.title || 'Unknown Problem',
           content: editForm.content,
