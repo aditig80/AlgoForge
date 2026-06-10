@@ -113,6 +113,18 @@ export const updateUserProfile = async (req: Request | any, res: Response) => {
     try {
         const userId = req.user.id;
         const { name, avatar, avatarUrl } = req.body;
+
+        // Validate inputs
+        if (name !== undefined && (typeof name !== 'string' || name.length > 100)) {
+            return res.status(400).json({ message: 'Invalid name' });
+        }
+        if (avatar !== undefined && avatar !== null && typeof avatar !== 'string') {
+            return res.status(400).json({ message: 'Invalid avatar' });
+        }
+        if (avatarUrl !== undefined && avatarUrl !== null && typeof avatarUrl !== 'string') {
+            return res.status(400).json({ message: 'Invalid avatar URL' });
+        }
+
         const avatarData = avatar !== undefined ? avatar : avatarUrl;
 
         const user = await prisma.user.findUnique({ where: { id: userId } });
