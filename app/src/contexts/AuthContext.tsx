@@ -226,7 +226,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setProfile((prev: any) => ({ ...prev, ...data }));
       
       if (user) {
-        setUser((prevUser) => prevUser ? { ...prevUser, name: data.name || prevUser.name } : null);
+        setUser((prevUser) => {
+          if (!prevUser) return null;
+          return {
+            ...prevUser,
+            name: data.name !== undefined ? data.name : prevUser.name,
+            avatar: data.avatar !== undefined ? data.avatar : prevUser.avatar
+          };
+        });
       }
 
       return { error: null };
