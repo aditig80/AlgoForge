@@ -108,3 +108,38 @@ export const getDashboardStats = async (req: Request | any, res: Response) => {
         res.status(500).json({ message: 'Server Error' });
     }
 };
+
+export const updateUserProfile = async (req: Request | any, res: Response) => {
+    try {
+        const userId = req.user.id;
+        const { name, avatar, avatarUrl } = req.body;
+        const avatarData = avatar !== undefined ? avatar : avatarUrl;
+
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const updatedUser = await prisma.user.update({
+            where: { id: userId },
+            data: {
+                name: name !== undefined ? name : user.name,
+                avatar: avatarData !== undefined ? avatarData : user.avatar,
+            }
+        });
+
+        res.status(200).json({
+            id: updatedUser.id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            avatar: updatedUser.avatar,
+            role: updatedUser.role,
+            xp_points: updatedUser.xp_points,
+            streak_days: updatedUser.streak_days,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
